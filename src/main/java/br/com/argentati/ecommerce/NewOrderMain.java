@@ -1,6 +1,7 @@
 package br.com.argentati.ecommerce;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.producer.Callback;
@@ -14,13 +15,15 @@ public class NewOrderMain {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		
 		var producer = new KafkaProducer<String, String>(properties());
-		var value = "123123,67523,7894589742";
+		
+		var key = UUID.randomUUID().toString();
+		var value = key + "67523,7894589742";
 		
 		// Registro que será enviada. Tópico / valores
-		var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value);
+		var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", key, value);
 		
 		var email = "Obrigado pela compra! Nós estamos processando ela no momento.";
-		var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", email, email);
+		var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
 		
 		// enviando uma mensagem que será armazenado no Kafka.
 		producer.send(record, callback()).get(); // como o send é assíncrono o get() força a espera (sync)
