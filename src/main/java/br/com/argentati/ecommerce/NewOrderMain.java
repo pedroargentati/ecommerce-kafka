@@ -3,6 +3,7 @@ package br.com.argentati.ecommerce;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -18,16 +19,24 @@ public class NewOrderMain {
 		// Registro que será enviada. Tópico / valores
 		var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", value, value);
 		
+		var email = "Obrigado pela compra! Nós estamos processando ela no momento.";
+		var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", email, email);
+		
 		// enviando uma mensagem que será armazenado no Kafka.
-		producer.send(record, (data, exeption) -> {
+		producer.send(record, callback()).get(); // como o send é assíncrono o get() força a espera (sync)
+		producer.send(emailRecord).get();
+		
+	}
+
+	private static Callback callback() {
+		return (data, exeption) -> {
 			// caso a exception seja diferente de nula, logar.
 			if (exeption != null) {
 				exeption.printStackTrace();
 				return;
 			}
 			System.out.println("Enviando com sucesso: " + data.topic() + ":::partition" + data.partition() + "/ offset" + data.offset() + "/" + data.timestamp());
-		}).get(); // como o send é assíncrono o get() força a espera (sync)
-		
+		};
 	}
 	
 	private static Properties properties() {

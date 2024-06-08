@@ -8,14 +8,12 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-public class FraudDetectorService {
+public class EmailService {
 
 	public static void main(String[] args) throws Exception {
 
 		var consumer = new KafkaConsumer<String, String>(properties());
-		// É comum o consumer escutar apenas um tópico. Cadas serviço tem uma
-		// tarefa/objetivo específico.
-		consumer.subscribe(Collections.singleton("ECCOMERCE_NEW_ORDER"));
+		consumer.subscribe(Collections.singleton("ECCOMERCE_SEND_EMAIL"));
 		while (true) {
 			var records = consumer.poll(Duration.ofMillis(100)); // irá escutar a cada 100ms.
 
@@ -23,7 +21,7 @@ public class FraudDetectorService {
 				System.out.println(records.count() + " registros foram encontrados.");
 				for (var record : records) {
 					System.out.println("----------------------------------------------------");
-					System.out.println("Processando nova compra. Verificando se há fraude.");
+					System.out.println("Enviando email.");
 					System.out.println(record.key());
 					System.out.println(record.value());
 					System.out.println(record.partition());
@@ -31,7 +29,7 @@ public class FraudDetectorService {
 					System.out.println("----------------------------------------------------");
 				}
 
-				System.out.println("Compra processada com sucesso.");
+				System.out.println("Email enviado com sucesso.");
 			}
 
 		}
@@ -44,7 +42,7 @@ public class FraudDetectorService {
 		properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
 		properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName()); // desserializador
 		properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-		properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
+		properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, EmailService.class.getSimpleName());
 
 		return properties;
 	}
