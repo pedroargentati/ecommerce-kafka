@@ -10,13 +10,12 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-public class KafkaDispatcher implements Closeable {
+public class KafkaDispatcher<T> implements Closeable {
 
-	private final KafkaProducer<String, String> producer;
+	private final KafkaProducer<String, T> producer;
 
 	public KafkaDispatcher() {
 		this.producer = new KafkaProducer<>(properties());
-
 	}
 
 	private static Properties properties() {
@@ -28,14 +27,14 @@ public class KafkaDispatcher implements Closeable {
 		// Serializador a ser usado para transformar a mensagem e a chave de strings
 		// para bytes
 		properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GsonSerializer.class.getName());
 
 		return properties;
 	}
 
-	public void send(String topic, String key, String value) throws InterruptedException, ExecutionException {
+	public void send(String topic, String key, T value) throws InterruptedException, ExecutionException {
 		// Registro que será enviada. Tópico / valores
-		var record = new ProducerRecord<String, String>(topic, key, value);
+		var record = new ProducerRecord<>(topic, key, value);
 
 		// enviando uma mensagem que será armazenado no Kafka.
 		producer.send(record, callback()).get(); // como o send é assíncrono o get() força a espera (sync)
