@@ -8,14 +8,14 @@ import com.google.gson.GsonBuilder;
 /**
  * Classe para serializar objetos em JSON e pegar seus bytes.
  * 
- * O Kafka só sabe serializar string em bytes, por isso essa classe
- * é necessária.
+ * O Kafka só sabe serializar string em bytes, por isso essa classe é
+ * necessária.
  * 
  * @author Pedro
  *
  * @param data <T>
  */
-public class GsonSerializer<T> implements Serializer<T>{
+public class GsonSerializer<T> implements Serializer<T> {
 
 	private final Gson gson = new GsonBuilder().create();
 

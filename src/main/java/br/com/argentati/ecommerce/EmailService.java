@@ -6,7 +6,7 @@ public class EmailService {
 
 	public static void main(String[] args) throws Exception {
 		var emailService = new EmailService();
-		try (var kafkaService = new KafkaService(EmailService.class.getSimpleName(), "ECCOMERCE_SEND_EMAIL", emailService::parse)) {
+		try (var kafkaService = new KafkaService<String>(EmailService.class.getSimpleName(), "ECCOMERCE_SEND_EMAIL", emailService::parse, String.class)) {
 			kafkaService.run();			
 		}
 	}
