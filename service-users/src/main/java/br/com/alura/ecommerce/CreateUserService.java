@@ -2,6 +2,7 @@ package br.com.argentati.ecommerce;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -13,9 +14,13 @@ public class CreateUserService {
 	public CreateUserService() {
 		String url = "jdbc:sqlite:target/users_database.db";
 		conenction = DriverManager.getConnection(url);
-		connection.createStatement().execute("CREATE TABLE Users ("
-				+ "UUID VARCHAR(200) PRIMARY KEY,"
-				+ "EMAIL VARCHAR(200) )");
+		try {
+			connection.createStatement().execute("CREATE TABLE Users ("
+					+ "UUID VARCHAR(200) PRIMARY KEY,"
+					+ "EMAIL VARCHAR(200) )");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

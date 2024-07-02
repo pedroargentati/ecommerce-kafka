@@ -34,14 +34,14 @@ public class CreateUserService {
 		var order = record.value();
 
 		if (this.isNewUser(order.getEmail())) {
-			this.insertNewUser(order.getEmail());
+			this.insertNewUser(order.getUserId(), order.getEmail());
 		}
 	}
 
-	private void insertNewUser(String email) throws SQLException {
+	private void insertNewUser(String uuid, String email) throws SQLException {
 		var insert = connection.prepareCall("INSERT INTO Users (uuid, email) "
 				+ "VALUES (?,?); ");
-		insert.setString(1, "uuid");
+		insert.setString(1, uuid);
 		insert.setString(2, "email");
 		
 		insert.execute();
