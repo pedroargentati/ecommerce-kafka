@@ -55,6 +55,20 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.28.0</version>
 		</dependency>
+		<!--
+			https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>9.4.23.v20191118</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

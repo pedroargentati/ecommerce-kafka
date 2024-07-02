@@ -35,9 +35,10 @@ public class FraudDetectorService {
 		if (this.isFraud(order)) {
 			// simulando uma detecção de fraude.
 			System.out.println("Compra é uma Fraude!" + order);
-			orderDispatcher.send("ECOMMERCEORDER_REJECTED", order.getUserId(), null);
+			orderDispatcher.send("ECOMMERCEORDER_REJECTED", order.getEmail(), null);
 		} else {
 			System.out.println("Compra processada com sucesso." + order);
+			orderDispatcher.send("ECOMMERCEORDER_APPROVED", order.getEmail(), null);
 		}
 
 	}

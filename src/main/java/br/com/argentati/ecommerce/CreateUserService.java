@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -34,15 +35,15 @@ public class CreateUserService {
 		var order = record.value();
 
 		if (this.isNewUser(order.getEmail())) {
-			this.insertNewUser(order.getUserId(), order.getEmail());
+			this.insertNewUser(order.getEmail());
 		}
 	}
 
-	private void insertNewUser(String uuid, String email) throws SQLException {
+	private void insertNewUser(String email) throws SQLException {
 		var insert = connection.prepareCall("INSERT INTO Users (uuid, email) "
 				+ "VALUES (?,?); ");
-		insert.setString(1, uuid);
-		insert.setString(2, "email");
+		insert.setString(1, UUID.randomUUID().toString());
+		insert.setString(2, email);
 		
 		insert.execute();
 		System.out.println("Usuário uuid e " + email + " adicionados.");
