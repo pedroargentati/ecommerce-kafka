@@ -29,6 +29,13 @@ public class KafkaDispatcher<T> implements Closeable {
 		properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GsonSerializer.class.getName());
 
+		/**
+		 * Qtd de "Ok's" que o producer quer do leader pra ter cereza que o request foi completada (garantia que o servidor recebeu).
+		 * all -> Garatir que a msg esteja em pelo menos mais dois lugares, pois os tópicos nesse caso tem o ReplicationFactory 3.
+		 * O .get() no método @see #send() vai esperar o ACKS do leader falar que as réplicas foram sincronizadas.
+		 */
+		properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+		
 		return properties;
 	}
 
