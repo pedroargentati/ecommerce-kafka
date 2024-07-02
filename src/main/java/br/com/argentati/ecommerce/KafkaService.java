@@ -33,7 +33,7 @@ public class KafkaService<T> implements Closeable {
 		consumer.subscribe(topic);
 	}
 
-	public void run() {
+	public void run() throws Exception {
 		while (true) {
 			var<String, T> records = consumer.poll(Duration.ofMillis(100)); // irá escutar a cada 100ms.
 			if (!records.isEmpty()) {

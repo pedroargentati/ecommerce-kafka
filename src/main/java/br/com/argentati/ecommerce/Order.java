@@ -32,4 +32,8 @@ public class Order {
 		return "Order [userId=" + userId + ", orderId=" + orderId + ", amount=" + amount + "]";
 	}
 
+	public String getEmail() {
+		return "email";
+	}
+
 }
